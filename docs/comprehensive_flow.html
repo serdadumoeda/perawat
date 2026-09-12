@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Keperawatan Indonesia — Comprehensive Application Flow</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --primary: #0f766e;
+    --primary-light: #14b8a6;
+    --primary-dark: #0d5c56;
+    --primary-bg: #f0fdfa;
+    --secondary: #1e40af;
+    --secondary-light: #3b82f6;
+    --secondary-bg: #eff6ff;
+    --accent: #7c3aed;
+    --accent-light: #a78bfa;
+    --accent-bg: #f5f3ff;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --warning: #d97706;
+    --warning-bg: #fffbeb;
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+    --info: #0284c7;
+    --info-bg: #f0f9ff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 10pt;
+    line-height: 1.6;
+    color: var(--gray-800);
+    background: #fff;
+  }
+
+  @page {
+    size: A4;
+    margin: 18mm 15mm 18mm 15mm;
+  }
+
+  @media print {
+    body { font-size: 9pt; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+    .cover-page { page-break-after: always; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: avoid; }
+    .mermaid { page-break-inside: avoid; }
+  }
+
+  /* ===== COVER PAGE ===== */
+  .cover-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .cover-logo {
+    width: 90px; height: 90px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 32px;
+    box-shadow: 0 8px 32px rgba(15,118,110,.25);
+  }
+  .cover-logo svg { width: 50px; height: 50px; fill: white; }
+  .cover-title {
+    font-size: 28pt;
+    font-weight: 900;
+    color: var(--gray-900);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .cover-subtitle {
+    font-size: 16pt;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 40px;
+  }
+  .cover-desc {
+    font-size: 11pt;
+    color: var(--gray-500);
+    max-width: 480px;
+    margin-bottom: 48px;
+    line-height: 1.8;
+  }
+  .cover-meta {
+    display: flex; gap: 32px;
+    font-size: 9pt;
+    color: var(--gray-400);
+  }
+  .cover-meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .cover-meta-label { font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 1px; font-size: 7pt; }
+  .cover-meta-value { font-weight: 500; color: var(--gray-700); font-size: 9pt; }
+  .cover-line {
+    width: 60px; height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 2px;
+    margin: 24px 0;
+  }
+
+  /* ===== TOC ===== */
+  .toc { padding: 10px 0; }
+  .toc h2 { page-break-before: avoid; }
+  .toc-list { list-style: none; padding: 0; }
+  .toc-list li {
+    padding: 6px 0;
+    border-bottom: 1px dotted var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    font-size: 10pt;
+  }
+  .toc-list li .toc-num { font-weight: 700; color: var(--primary); margin-right: 10px; min-width: 28px; }
+  .toc-list li .toc-text { flex: 1; }
+  .toc-section { font-weight: 600; color: var(--gray-800); }
+  .toc-sub { padding-left: 28px; font-size: 9pt; color: var(--gray-600); border-bottom: none !important; }
+
+  /* ===== HEADINGS ===== */
+  h1 { font-size: 22pt; font-weight: 900; color: var(--gray-900); margin-bottom: 16px; }
+  h2 {
+    font-size: 16pt; font-weight: 800; color: var(--gray-900);
+    padding-bottom: 8px; margin-top: 32px; margin-bottom: 16px;
+    border-bottom: 3px solid var(--primary);
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2 .section-num {
+    background: var(--primary);
+    color: white;
+    font-size: 10pt;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+  }
+  h3 {
+    font-size: 12pt; font-weight: 700; color: var(--primary-dark);
+    margin-top: 20px; margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 4px solid var(--primary-light);
+  }
+  h4 {
+    font-size: 10pt; font-weight: 700; color: var(--gray-700);
+    margin-top: 14px; margin-bottom: 8px;
+  }
+
+  /* ===== TABLES ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 9pt;
+  }
+  thead th {
+    background: var(--gray-800);
+    color: white;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  thead th:first-child { border-radius: 6px 0 0 0; }
+  thead th:last-child { border-radius: 0 6px 0 0; }
+  tbody td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  tbody tr:nth-child(even) { background: var(--gray-50); }
+  tbody tr:hover { background: var(--primary-bg); }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    background: var(--gray-100);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* ===== INFO BOXES ===== */
+  .box {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 12px 0;
+    font-size: 9pt;
+    line-height: 1.6;
+    border-left: 4px solid;
+  }
+  .box-info { background: var(--info-bg); border-color: var(--info); }
+  .box-info .box-title { color: var(--info); }
+  .box-warning { background: var(--warning-bg); border-color: var(--warning); }
+  .box-warning .box-title { color: var(--warning); }
+  .box-success { background: var(--success-bg); border-color: var(--success); }
+  .box-success .box-title { color: var(--success); }
+  .box-danger { background: var(--danger-bg); border-color: var(--danger); }
+  .box-danger .box-title { color: var(--danger); }
+  .box-title { font-weight: 700; font-size: 9pt; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .box-title svg { width: 14px; height: 14px; }
+
+  /* ===== MERMAID STYLING ===== */
+  .mermaid {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 14px 0;
+    text-align: center;
+    overflow-x: auto;
+  }
+
+  /* ===== ROUTE LIST ===== */
+  .route-list {
+    margin: 10px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+  }
+  .route-item {
+    display: flex; gap: 8px; padding: 4px 0;
+    border-bottom: 1px solid var(--gray-100);
+    align-items: baseline;
+  }
+  .route-method {
+    font-weight: 700; min-width: 48px; text-align: right;
+    font-size: 7pt; padding: 1px 6px; border-radius: 3px;
+  }
+  .route-method.get { background: #d1fae5; color: #065f46; }
+  .route-method.post { background: #dbeafe; color: #1e40af; }
+  .route-method.put, .route-method.patch { background: #fef3c7; color: #92400e; }
+  .route-method.delete { background: #fee2e2; color: #991b1b; }
+  .route-path { color: var(--gray-700); flex: 1; }
+  .route-desc { color: var(--gray-400); font-family: 'Inter', sans-serif; font-size: 8pt; }
+
+  /* ===== STATS GRID ===== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .stat-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+  .stat-value { font-size: 18pt; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 7pt; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+  /* ===== COLUMNS ===== */
+  .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* ===== MISC ===== */
+  p { margin: 6px 0; }
+  ul, ol { padding-left: 20px; margin: 6px 0; }
+  li { margin: 3px 0; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 7.5pt;
+    font-weight: 700;
+  }
+  .badge-primary { background: var(--primary-bg); color: var(--primary); }
+  .badge-blue { background: var(--secondary-bg); color: var(--secondary); }
+  .badge-purple { background: var(--accent-bg); color: var(--accent); }
+  .badge-green { background: var(--success-bg); color: var(--success); }
+  .badge-red { background: var(--danger-bg); color: var(--danger); }
+  .badge-yellow { background: var(--warning-bg); color: var(--warning); }
+  .badge-gray { background: var(--gray-100); color: var(--gray-600); }
+
+  .separator { border: none; border-top: 2px solid var(--gray-100); margin: 24px 0; }
+
+  .footer {
+    text-align: center;
+    font-size: 7pt;
+    color: var(--gray-400);
+    padding: 20px 0;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 32px;
+  }
+
+  .state-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .state-badge.pending { background: #fef3c7; color: #92400e; }
+  .state-badge.active { background: #d1fae5; color: #065f46; }
+  .state-badge.rejected { background: #fee2e2; color: #991b1b; }
+</style>
+
+<!-- Load Mermaid from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '11px',
+        primaryColor: '#f0fdfa',
+        primaryTextColor: '#0f766e',
+        primaryBorderColor: '#14b8a6',
+        lineColor: '#0f766e',
+        secondaryColor: '#eff6ff',
+        secondaryTextColor: '#1e40af',
+        secondaryBorderColor: '#3b82f6',
+        tertiaryColor: '#f5f3ff',
+        tertiaryTextColor: '#7c3aed',
+        tertiaryBorderColor: '#a78bfa',
+        noteBkgColor: '#fffbeb',
+        noteTextColor: '#b45309',
+        noteBorderColor: '#f59e0b',
+        actorBkg: '#f0fdfa',
+        actorBorder: '#14b8a6',
+        actorTextColor: '#0f766e',
+        labelBoxBkgColor: '#f9fafb',
+        labelBoxBorderColor: '#d1d5db',
+        labelTextColor: '#374151'
+      }
+    });
+  });
+</script>
+</head>
+<body>
+
+<!-- ============================================ -->
+<!-- COVER PAGE -->
+<!-- ============================================ -->
+<div class="cover-page">
+  <div class="cover-logo">
+    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+    </svg>
+  </div>
+  <h1 class="cover-title">Platform Keperawatan Indonesia</h1>
+  <p class="cover-subtitle">Comprehensive Application Flow</p>
+  <div class="cover-line"></div>
+  <p class="cover-desc">
+    Dokumentasi komprehensif seluruh alur (flow) aplikasi Platform Keperawatan Indonesia.
+    Mencakup arsitektur sistem, ERD, 8 peran pengguna, alur rekrutmen, manajemen legalitas STR,
+    sertifikasi kompetensi, career events timeline, API integration, webhook system, dan seluruh
+    business logic yang ada di dalam codebase.
+  </p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Framework</span>
+      <span class="cover-meta-value">Laravel 11</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Models</span>
+      <span class="cover-meta-value">31 Eloquent</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Controllers</span>
+      <span class="cover-meta-value">43 Total</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Endpoints</span>
+      <span class="cover-meta-value">140+ Routes</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">Tanggal</span>
+      <span class="cover-meta-value">Juli 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- TABLE OF CONTENTS -->
+<!-- ============================================ -->
+<div class="toc">
+  <h2><span class="section-num">📑</span> Daftar Isi</h2>
+  <ul class="toc-list">
+    <li class="toc-section"><span class="toc-num">1</span><span class="toc-text">Arsitektur Sistem & Technology Stack</span></li>
+    <li class="toc-section"><span class="toc-num">2</span><span class="toc-text">Entity Relationship Diagram (ERD)</span></li>
+    <li class="toc-section"><span class="toc-num">3</span><span class="toc-text">Sistem Peran (Role-Based Access Control)</span></li>
+    <li class="toc-section"><span class="toc-num">4</span><span class="toc-text">Alur Autentikasi & Otorisasi</span></li>
+    <li class="toc-section"><span class="toc-num">5</span><span class="toc-text">Flow per Role — Detail Lengkap</span></li>
+    <li class="toc-sub"><span class="toc-num">5.1</span><span class="toc-text">Perawat (Nurse)</span></li>
+    <li class="toc-sub"><span class="toc-num">5.2</span><span class="toc-text">Mitra / Faskes / Headhunter (Employer)</span></li>
+    <li class="toc-sub"><span class="toc-num">5.3</span><span class="toc-text">Kampus (Educational Institution)</span></li>
+    <li class="toc-sub"><span class="toc-num">5.4</span><span class="toc-text">Lembaga (Training Institution)</span></li>
+    <li class="toc-sub"><span class="toc-num">5.5</span><span class="toc-text">Regulator</span></li>
+    <li class="toc-sub"><span class="toc-num">5.6</span><span class="toc-text">Admin</span></li>
+    <li class="toc-section"><span class="toc-num">6</span><span class="toc-text">Public Routes (Tanpa Auth)</span></li>
+    <li class="toc-section"><span class="toc-num">7</span><span class="toc-text">REST API v1</span></li>
+    <li class="toc-section"><span class="toc-num">8</span><span class="toc-text">Career Events Timeline</span></li>
+    <li class="toc-section"><span class="toc-num">9</span><span class="toc-text">Webhook System</span></li>
+    <li class="toc-section"><span class="toc-num">10</span><span class="toc-text">Notification System</span></li>
+    <li class="toc-section"><span class="toc-num">11</span><span class="toc-text">Scheduled Jobs & Commands</span></li>
+    <li class="toc-section"><span class="toc-num">12</span><span class="toc-text">Data Verification Flow (End-to-End)</span></li>
+    <li class="toc-section"><span class="toc-num">13</span><span class="toc-text">Recruitment Pipeline (Complete)</span></li>
+    <li class="toc-section"><span class="toc-num">14</span><span class="toc-text">Identity Model (perawat_nik)</span></li>
+    <li class="toc-section"><span class="toc-num">15</span><span class="toc-text">Source Tracking & Audit</span></li>
+    <li class="toc-section"><span class="toc-num">16</span><span class="toc-text">Ringkasan Komponen</span></li>
+  </ul>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 1: ARSITEKTUR -->
+<!-- ============================================ -->
+<h2><span class="section-num">1</span> Arsitektur Sistem & Technology Stack</h2>
+
+<div class="no-break">
+<h3>1.1 Technology Stack</h3>
+<table>
+  <thead>
+    <tr><th>Layer</th><th>Teknologi</th><th>Keterangan</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Framework</strong></td><td>Laravel 11 (PHP)</td><td>Full-stack MVC framework</td></tr>
+    <tr><td><strong>Frontend</strong></td><td>Blade + Tailwind CSS + Vite</td><td>Server-side rendering dengan modern CSS</td></tr>
+    <tr><td><strong>Database</strong></td><td>SQLite (dev) / PostgreSQL (prod)</td><td>Dual-driver support</td></tr>
+    <tr><td><strong>Queue</strong></td><td>Laravel Queue</td><td>Sync/database driver</td></tr>
+    <tr><td><strong>Auth</strong></td><td>Laravel Breeze</td><td>Session-based authentication</td></tr>
+    <tr><td><strong>API</strong></td><td>REST API v1</td><td>API Key + HMAC Signature</td></tr>
+    <tr><td><strong>Primary Key</strong></td><td>UUID (v4)</td><td>Semua model menggunakan UUID</td></tr>
+    <tr><td><strong>Identity Link</strong></td><td>NIK (16 digit)</td><td>Foreign key utama lintas tabel</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="no-break">
+<h3>1.2 Struktur Direktori Aplikasi</h3>
+<div class="cols-2">
+  <div>
+    <h4>Controllers (43 total)</h4>
+    <table>
+      <thead><tr><th>Namespace</th><th>Jumlah</th></tr></thead>
+      <tbody>
+        <tr><td>Admin</td><td>16 controllers</td></tr>
+        <tr><td>Api</td><td>3 controllers</td></tr>
+        <tr><td>Auth</td><td>Standard Breeze</td></tr>
+        <tr><td>Kampus</td><td>2 controllers</td></tr>
+        <tr><td>Lembaga</td><td>3 controllers</td></tr>
+        <tr><td>Mitra</td><td>7 controllers</td></tr>
+        <tr><td>Perawat</td><td>8 controllers</td></tr>
+        <tr><td>Regulator</td><td>5 controllers</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h4>Support Layer</h4>
+    <table>
+      <thead><tr><th>Komponen</th><th>Jumlah</th></tr></thead>
+      <tbody>
+        <tr><td>Models</td><td>31</td></tr>
+        <tr><td>Services</td><td>22</td></tr>
+        <tr><td>Policies</td><td>7</td></tr>
+        <tr><td>Notifications</td><td>8</td></tr>
+        <tr><td>Observers</td><td>3</td></tr>
+        <tr><td>Jobs</td><td>3</td></tr>
+        <tr><td>Middleware</td><td>4</td></tr>
+        <tr><td>Migrations</td><td>59</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 2: ERD -->
+<!-- ============================================ -->
+<h2><span class="section-num">2</span> Entity Relationship Diagram (ERD)</h2>
+
+<div class="no-break">
+<p>Berikut adalah bagan alir visual (ERD) yang memetakan hubungan antar tabel model pada Platform Keperawatan:</p>
+<pre class="mermaid">
+erDiagram
+    User ||--o| Perawat : "perawat_nik → nik"
+    User }o--o{ InstitusiPendidikan : "organisasi_user (morph)"
+    User }o--o{ LembagaPelatihan : "organisasi_user (morph)"
+    User }o--o{ MitraPengguna : "organisasi_user (morph)"
+    User }o--o{ RegulatorOrganisasi : "organisasi_user (morph)"
+
+    Perawat ||--o| DataLegalitas : "perawat_nik"
+    Perawat ||--o{ RiwayatPendidikan : "perawat_nik"
+    Perawat ||--o{ SertifikasiKompetensi : "perawat_nik"
+    Perawat ||--o{ RiwayatPekerjaan : "perawat_nik"
+    Perawat ||--o{ TracingAlumni : "perawat_nik"
+    Perawat ||--o{ PelatihanPeserta : "perawat_nik"
+    Perawat ||--o{ Rekrutmen : "perawat_nik"
+    Perawat ||--o{ Lamaran : "perawat_nik"
+    Perawat ||--o{ CareerEvent : "perawat_nik"
+
+    RiwayatPendidikan }o--|| InstitusiPendidikan : "belongs_to"
+    SertifikasiKompetensi }o--|| LembagaPelatihan : "belongs_to"
+    SertifikasiKompetensi }o--o| Pelatihan : "belongs_to"
+    RiwayatPekerjaan }o--|| MitraPengguna : "belongs_to"
+    Rekrutmen }o--|| MitraPengguna : "belongs_to"
+    Rekrutmen }o--o| Lowongan : "belongs_to"
+
+    MitraPengguna ||--o{ Lowongan : "has_many"
+    MitraPengguna ||--o{ Lamaran : "has_many"
+    Lowongan ||--o{ Lamaran : "has_many"
+    Lowongan ||--o{ Rekrutmen : "has_many"
+
+    LembagaPelatihan ||--o{ Pelatihan : "has_many"
+    Pelatihan ||--o{ PelatihanPeserta : "has_many"
+
+    DataLegalitas }o--o| RegulatorOrganisasi : "belongs_to"
+    RegulatorOrganisasi ||--o{ DataLegalitas : "has_many"
+
+    ApiKey }o--|| User : "owner (morph)"
+    WebhookSubscription ||--o{ WebhookDelivery : "has_many"
+</pre>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 3: RBAC -->
+<!-- ============================================ -->
+<h2><span class="section-num">3</span> Sistem Peran (Role-Based Access Control)</h2>
+
+<div class="no-break">
+<h3>3.1 Definisi 8 Peran</h3>
+<table>
+  <thead>
+    <tr><th>#</th><th>Role</th><th>Deskripsi</th><th>Middleware Guard</th><th>Prefix URL</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td><code>perawat</code></td><td>Tenaga perawat / nurse</td><td><span class="badge badge-primary">role:perawat</span></td><td>/perawat</td></tr>
+    <tr><td>2</td><td><code>mitra</code></td><td>Mitra pengguna / employer</td><td><span class="badge badge-blue">role:mitra,faskes,headhunter</span></td><td>/mitra</td></tr>
+    <tr><td>3</td><td><code>faskes</code></td><td>Fasilitas kesehatan</td><td><span class="badge badge-blue">role:mitra,faskes,headhunter</span></td><td>/mitra</td></tr>
+    <tr><td>4</td><td><code>headhunter</code></td><td>Agen perekrut</td><td><span class="badge badge-blue">role:mitra,faskes,headhunter</span></td><td>/mitra</td></tr>
+    <tr><td>5</td><td><code>kampus</code></td><td>Institusi pendidikan keperawatan</td><td><span class="badge badge-purple">role:kampus</span></td><td>/kampus</td></tr>
+    <tr><td>6</td><td><code>lembaga</code></td><td>Lembaga pelatihan & sertifikasi</td><td><span class="badge badge-yellow">role:lembaga</span></td><td>/lembaga</td></tr>
+    <tr><td>7</td><td><code>regulator</code></td><td>Regulator (PPNI, Kemenkes)</td><td><span class="badge badge-red">role:regulator</span></td><td>/regulator</td></tr>
+    <tr><td>8</td><td><code>admin</code></td><td>Super administrator platform</td><td><span class="badge badge-gray">role:admin</span></td><td>/admin</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="no-break">
+<h3>3.2 Status User — State Machine</h3>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> pending : Register
+    pending --> active : Admin Approve
+    active --> suspended : Admin Suspend
+    suspended --> active : Admin Activate
+    pending --> suspended : Admin Suspend
+</pre>
+<table>
+  <thead><tr><th>Status</th><th>Akses</th><th>Behavior</th></tr></thead>
+  <tbody>
+    <tr><td><span class="state-badge pending">PENDING</span></td><td>Terbatas</td><td>Redirect ke halaman "Menunggu Persetujuan Admin"</td></tr>
+    <tr><td><span class="state-badge active">ACTIVE</span></td><td>Penuh</td><td>Akses penuh sesuai role</td></tr>
+    <tr><td><span class="state-badge rejected">SUSPENDED</span></td><td>Diblokir</td><td>403 Forbidden — "Akun Anda ditangguhkan"</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="no-break">
+<h3>3.3 Middleware Chain Flow</h3>
+<pre class="mermaid">
+flowchart LR
+    A[Request Masuk] --> B{Authenticated?}
+    B -->|No| C[Redirect Login]
+    B -->|Yes| D{Email Verified?}
+    D -->|No| E[Verify Email Page]
+    D -->|Yes| F{Role Match?}
+    F -->|No| G[403 Forbidden]
+    F -->|Yes| H{Status = pending?}
+    H -->|Yes| I[Pending Approval Page]
+    H -->|No| J{Status = active?}
+    J -->|No| K[403 - Akun Ditangguhkan]
+    J -->|Yes| L[✅ Controller Action]
+</pre>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 4: AUTH -->
+<!-- ============================================ -->
+<h2><span class="section-num">4</span> Alur Autentikasi & Otorisasi</h2>
+
+<div class="no-break">
+<h3>4.1 Registrasi</h3>
+<pre class="mermaid">
+sequenceDiagram
+    actor User
+    participant Register as RegisteredUserController
+    participant DB as Database
+    participant Email as Email Service
+
+    User->>Register: GET /register
+    Register-->>User: Form registrasi (nama, email, password, role)
+    User->>Register: POST /register
+    Register->>DB: Create User (status=pending untuk non-perawat)<br/>Create Perawat record (jika role=perawat)
+    Register->>Email: Send email verification
+    Register-->>User: Redirect ke dashboard
+    Note over User: Jika role ≠ admin, user<br/>status=pending, akan redirect<br/>ke halaman pending-approval
+</pre>
+</div>
+
+<div class="no-break">
+<h3>4.2 Login → Dashboard Routing</h3>
+<pre class="mermaid">
+flowchart TD
+    A[User Login] --> B{Role?}
+    B -->|perawat| C[perawat/dashboard → ProfilController::show]
+    B -->|mitra/faskes/headhunter| D[mitra/lowongan → LowonganController::index]
+    B -->|kampus| E[kampus/lulusan → LulusanController::index]
+    B -->|lembaga| F[lembaga/dashboard → LembagaDashboardController::index]
+    B -->|regulator| G[regulator/analytics → AnalyticsController::index]
+    B -->|admin| H[admin/dashboard → AdminDashboardController::index]
+</pre>
+</div>
+
+<div class="no-break">
+<h3>4.3 Auth Routes</h3>
+<div class="route-list">
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/register</span><span class="route-desc">Form registrasi</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/register</span><span class="route-desc">Submit registrasi (throttle: 10/min)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/login</span><span class="route-desc">Form login</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/login</span><span class="route-desc">Submit login (throttle: 20/min)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/forgot-password</span><span class="route-desc">Form forgot password</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/forgot-password</span><span class="route-desc">Send reset link (throttle: 5/min)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/reset-password/{token}</span><span class="route-desc">Form reset password</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/reset-password</span><span class="route-desc">Submit new password</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/verify-email</span><span class="route-desc">Email verification prompt</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/logout</span><span class="route-desc">Logout</span></div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 5: FLOWS PER ROLE -->
+<!-- ============================================ -->
+<h2><span class="section-num">5</span> Flow per Role — Detail Lengkap</h2>
+
+<!-- 5.1 PERAWAT -->
+<h3>5.1 🩺 PERAWAT (Nurse)</h3>
+
+<div class="no-break">
+<h4>5.1.1 Dashboard Relations & Status Kesiapan</h4>
+<div class="box box-info">
+  <div class="box-title">ℹ️ Penting</div>
+  Perawat harus memiliki <strong>3 hal terverifikasi</strong> untuk menjadi "Ready to Hire":
+  (1) Riwayat Pendidikan verified (dari Kampus),
+  (2) Sertifikasi Kompetensi verified (dari Lembaga),
+  (3) Data Legalitas STR aktif & data verified (dari Regulator).
+</div>
+
+<h5>Dashboard Relation Loading</h5>
+<pre class="mermaid">
+flowchart TD
+    A[GET /perawat/dashboard] --> B[Load Perawat + Relations]
+    B --> C[Load DataLegalitas + reviewer]
+    B --> D[Load RiwayatPendidikan + institusi]
+    B --> E[Load Sertifikasi + lembaga]
+    B --> F[Load RiwayatPekerjaan + mitra]
+    B --> G[Load CareerEvents - latest 15]
+    B --> H[Count unread legalitas notifications]
+    C & D & E & F & G & H --> I[Render perawat.dashboard]
+</pre>
+
+<h5>Kesiapan & Ketenagakerjaan Status Determination</h5>
+<pre class="mermaid">
+flowchart TD
+    A["PerawatStatusService::refresh()"] --> B{Punya Pendidikan Verified?}
+    B -->|No| DRAFT[status_kesiapan = DRAFT]
+    B -->|Yes| C{Punya Sertifikasi Verified?}
+    C -->|No| DRAFT
+    C -->|Yes| D{Legalitas STR Aktif + Data Verified?}
+    D -->|No| DRAFT
+    D -->|Yes| READY["status_kesiapan = READY_TO_HIRE ✅"]
+    
+    A --> E{Hired atau Pekerjaan Aktif Verified?}
+    E -->|Yes| BEKERJA[status_ketenagakerjaan = BEKERJA]
+    E -->|No| F{Punya Riwayat Pekerjaan Verified?}
+    F -->|Yes| BERPENGALAMAN[status_ketenagakerjaan = BERPENGALAMAN]
+    F -->|No| FRESH[status_ketenagakerjaan = FRESH_GRADUATE]
+</pre>
+</div>
+
+<div class="no-break">
+<h4>5.1.2 Melamar Lowongan</h4>
+<pre class="mermaid">
+sequenceDiagram
+    actor Perawat
+    participant LC as LowonganController
+    participant DB as Database
+    participant Notif as NotificationSystem
+    
+    Perawat->>LC: GET /perawat/lowongan
+    Note over LC: Filter: q, tipe_penempatan<br/>Hanya status=dibuka & published
+    LC-->>Perawat: List lowongan + appliedIds
+    
+    Perawat->>LC: GET /perawat/lowongan/{id}
+    LC-->>Perawat: Detail lowongan + existing lamaran
+    
+    Perawat->>LC: POST /perawat/lowongan/apply
+    LC->>LC: Validasi: status_kesiapan == READY?
+    LC->>LC: Validasi: tidak locked/hired?
+    LC->>LC: Validasi: belum pernah melamar?
+    LC->>DB: Lock lowongan FOR UPDATE
+    LC->>DB: Create Lamaran (status=DIAJUKAN)
+    LC->>DB: AuditLog (lamaran.apply)
+    LC->>Notif: Notify semua user Mitra terkait
+    LC-->>Perawat: Redirect + "Lamaran berhasil dikirim"
+</pre>
+</div>
+
+<div class="no-break">
+<h4>5.1.3 Semua Routes Perawat</h4>
+<div class="route-list">
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/dashboard</span><span class="route-desc">Dashboard profil + career timeline</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/profil/edit</span><span class="route-desc">Form edit data pribadi</span></div>
+  <div class="route-item"><span class="route-method patch">PATCH</span><span class="route-path">/perawat/profil</span><span class="route-desc">Update profil</span></div>
+  <div class="route-item"><span class="route-method patch">PATCH</span><span class="route-path">/perawat/profil/share</span><span class="route-desc">Toggle profil publik + generate token</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/cv</span><span class="route-desc">Download CV HTML</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/cv-pdf</span><span class="route-desc">Download CV PDF</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/lowongan</span><span class="route-desc">Browse lowongan (status=dibuka)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/lowongan/{id}</span><span class="route-desc">Detail lowongan</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/perawat/lowongan/apply</span><span class="route-desc">Melamar lowongan</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/lamaran</span><span class="route-desc">List lamaran saya</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/perawat/lamaran/{id}/cancel</span><span class="route-desc">Batalkan lamaran</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/riwayat-pekerjaan</span><span class="route-desc">List riwayat pekerjaan</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/riwayat-pekerjaan/create</span><span class="route-desc">Form tambah riwayat (self-report)</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/perawat/riwayat-pekerjaan</span><span class="route-desc">Store riwayat (verifikasi=pending)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/riwayat-pekerjaan/{id}/edit</span><span class="route-desc">Edit riwayat (jika pending/rejected)</span></div>
+  <div class="route-item"><span class="route-method put">PUT</span><span class="route-path">/perawat/riwayat-pekerjaan/{id}</span><span class="route-desc">Update riwayat</span></div>
+  <div class="route-item"><span class="route-method delete">DELETE</span><span class="route-path">/perawat/riwayat-pekerjaan/{id}</span><span class="route-desc">Hapus riwayat (jika belum verified)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/str-sync</span><span class="route-desc">Form request sync STR</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/perawat/str-sync</span><span class="route-desc">Submit STR sync request</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/pelatihan</span><span class="route-desc">List pelatihan tersedia</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/pelatihan/saya</span><span class="route-desc">Pelatihan yang diikuti</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/perawat/pelatihan/daftar</span><span class="route-desc">Daftar pelatihan</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/notifikasi</span><span class="route-desc">List notifikasi</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/perawat/notifikasi/mark-read</span><span class="route-desc">Tandai semua sudah dibaca</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/perawat/legalitas/audit</span><span class="route-desc">Audit trail perubahan legalitas</span></div>
+</div>
+</div>
+
+<!-- 5.2 MITRA -->
+<h3>5.2 🏢 MITRA / FASKES / HEADHUNTER (Employer)</h3>
+
+<div class="no-break">
+<h4>5.2.1 Lowongan — State Machine</h4>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> dibuka : Create + Publish
+    dibuka --> ditutup : Close
+    ditutup --> dibuka : Reopen
+    dibuka --> [*] : Delete
+    ditutup --> [*] : Delete
+    
+    note right of dibuka : Perawat bisa melamar
+    note right of ditutup : Tidak bisa menerima lamaran
+</pre>
+</div>
+
+<div class="no-break">
+<h4>5.2.2 Lamaran — State Machine & Pipeline</h4>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> diajukan : Perawat Apply
+    diajukan --> diproses : Mitra Process (Lock)
+    diajukan --> ditolak : Mitra Reject
+    diproses --> diterima : Mitra Hire
+    diproses --> ditolak : Mitra Reject
+    diterima --> [*]
+    ditolak --> [*]
+    diajukan --> dibatalkan : Perawat Cancel
+    diproses --> dibatalkan : Perawat Cancel
+    dibatalkan --> [*]
+</pre>
+<div class="box box-warning">
+  <div class="box-title">⚠️ Anti-Poaching Mechanism</div>
+  Kandidat yang sedang <strong>LOCKED</strong> atau <strong>HIRED</strong> oleh mitra lain TIDAK bisa diproses. Sistem return HTTP 409 Conflict.
+</div>
+
+<h5>Pipeline Flow: Lock, Hire & Reject</h5>
+<pre class="mermaid">
+sequenceDiagram
+    actor Mitra
+    participant LC as LamaranController
+    participant DB as Database
+    participant RS as RiwayatPekerjaanService
+    participant PS as PerawatStatusService
+    
+    Note over Mitra,PS: === PROSES (Lock) ===
+    Mitra->>LC: POST /mitra/lamaran/process
+    LC->>DB: Lock lamaran FOR UPDATE
+    LC->>LC: Check: tidak final? tidak locked oleh mitra lain?
+    LC->>DB: Create/Update Rekrutmen (status=LOCKED)
+    LC->>DB: Update Lamaran (status=DIPROSES)
+    LC->>DB: AuditLog (lamaran.lock)
+    LC-->>Mitra: "Lamaran dikunci dan ditandai diproses"
+    
+    Note over Mitra,PS: === HIRE ===
+    Mitra->>LC: POST /mitra/lamaran/hire
+    LC->>DB: Lock lamaran FOR UPDATE
+    LC->>DB: Create/Update Rekrutmen (status=HIRED)
+    LC->>DB: Update Lamaran (status=DITERIMA)
+    LC->>RS: startEmployment() → auto-create RiwayatPekerjaan
+    LC->>PS: refresh() → update status ketenagakerjaan
+    LC-->>Mitra: "Lamaran diterima dan kandidat di-hire"
+    
+    Note over Mitra,PS: === REJECT ===
+    Mitra->>LC: POST /mitra/lamaran/reject
+    LC->>DB: Update Rekrutmen (status=RELEASED)
+    LC->>DB: Update Lamaran (status=DITOLAK)
+    LC->>PS: refresh() → update status ketenagakerjaan
+    LC-->>Mitra: "Lamaran ditolak"
+</pre>
+</div>
+
+<div class="no-break">
+<h4>5.2.3 Pencarian Kandidat — 16 Filter</h4>
+<table>
+  <thead><tr><th>Filter</th><th>Keterangan</th><th>Tipe</th></tr></thead>
+  <tbody>
+    <tr><td><code>nama</code></td><td>Pencarian nama perawat</td><td>LIKE</td></tr>
+    <tr><td><code>jenis_kelamin</code></td><td>Filter gender</td><td>Exact</td></tr>
+    <tr><td><code>status_str</code></td><td>Status STR (aktif/hold/expired)</td><td>Exact</td></tr>
+    <tr><td><code>status_ketenagakerjaan</code></td><td>fresh_graduate / bekerja / berpengalaman</td><td>Exact</td></tr>
+    <tr><td><code>status_ketersediaan</code></td><td>available / open_to_offer / not_available</td><td>Exact</td></tr>
+    <tr><td><code>kota</code>, <code>provinsi</code></td><td>Lokasi perawat</td><td>Exact</td></tr>
+    <tr><td><code>jenjang</code></td><td>Jenjang pendidikan (D3/S1/Ners/S2)</td><td>Exact</td></tr>
+    <tr><td><code>program_studi</code></td><td>Program studi</td><td>LIKE</td></tr>
+    <tr><td><code>min_ipk</code></td><td>IPK minimum</td><td>≥ float</td></tr>
+    <tr><td><code>sertifikat</code></td><td>Nama sertifikat (verified only)</td><td>LIKE</td></tr>
+    <tr><td><code>sertifikat_verifikasi</code></td><td>Exact match sertifikat terverifikasi</td><td>Exact</td></tr>
+    <tr><td><code>min_pengalaman</code></td><td>Minimal tahun pengalaman per record</td><td>≥ years</td></tr>
+    <tr><td><code>min_pengalaman_total</code></td><td>Total akumulasi bulan (overlap merged)</td><td>≥ months</td></tr>
+    <tr><td><code>lokasi</code></td><td>Pencarian alamat / tempat lahir</td><td>LIKE</td></tr>
+  </tbody>
+</table>
+<p><strong>Sorting:</strong> <code>ipk_desc</code>, <code>ipk_asc</code>, <code>pengalaman_desc</code>, <code>pengalaman_asc</code>, <code>str_expired</code>, <code>str_active</code>, <code>nama_asc</code></p>
+</div>
+
+<div class="no-break">
+<h4>5.2.4 Riwayat Pekerjaan — Verifikasi oleh Mitra</h4>
+<div class="route-list">
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/mitra/riwayat-pekerjaan/pending</span><span class="route-desc">List pending verifications</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/mitra/riwayat-pekerjaan/aktif</span><span class="route-desc">List active employments</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/mitra/riwayat-pekerjaan/{id}/verify</span><span class="route-desc">Verify riwayat pekerjaan</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/mitra/riwayat-pekerjaan/{id}/reject</span><span class="route-desc">Reject riwayat pekerjaan</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/mitra/riwayat-pekerjaan/{id}/complete</span><span class="route-desc">Mark contract completed</span></div>
+</div>
+</div>
+
+<!-- 5.3 KAMPUS -->
+<div class="no-break">
+<h3>5.3 🎓 KAMPUS (Educational Institution)</h3>
+<h4>5.3.1 Input Lulusan (Manual & CSV Import)</h4>
+<pre class="mermaid">
+sequenceDiagram
+    actor Kampus
+    participant LC as LulusanController
+    participant DB as Database
+    
+    Note over Kampus,DB: === Input Manual ===
+    Kampus->>LC: GET /kampus/lulusan/create
+    LC-->>Kampus: Form input lulusan
+    Kampus->>LC: POST /kampus/lulusan
+    LC->>DB: Find/Create Perawat (by NIK)
+    LC->>DB: Create RiwayatPendidikan (status=verified, source=kampus_portal)
+    LC->>DB: Create User account (role=perawat, random password)
+    LC-->>Kampus: Success + redirect
+    
+    Note over Kampus,DB: === Import CSV ===
+    Kampus->>LC: GET /kampus/lulusan/import
+    LC-->>Kampus: Form upload CSV + template download
+    Kampus->>LC: POST /kampus/lulusan/import
+    LC->>LC: Parse CSV + validate per row
+    LC->>DB: Batch create Perawat + RiwayatPendidikan + User
+    LC-->>Kampus: Import result (success/failed/duplicate counts)
+</pre>
+
+<h4>5.3.2 Tracing Alumni</h4>
+<div class="route-list">
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/kampus/tracing-alumni</span><span class="route-desc">List alumni + status kerja</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/kampus/tracing-alumni/{id}</span><span class="route-desc">Detail + form update status</span></div>
+  <div class="route-item"><span class="route-method put">PUT</span><span class="route-path">/kampus/tracing-alumni/{id}</span><span class="route-desc">Update status pekerjaan alumni</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/kampus/tracing-analytics</span><span class="route-desc">Dashboard analytics tracing</span></div>
+</div>
+<p><strong>Status Alumni:</strong> <code>belum_bekerja</code> | <code>bekerja</code> | <code>wirausaha</code> | <code>lanjut_studi</code></p>
+</div>
+
+<!-- 5.4 LEMBAGA -->
+<div class="no-break">
+<h3>5.4 🏫 LEMBAGA (Training Institution)</h3>
+<h4>5.4.1 Sertifikasi — Status Flow</h4>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> pending : Created
+    pending --> verified : Lembaga Verify
+    pending --> rejected : Lembaga Reject
+    verified --> [*]
+    rejected --> [*]
+</pre>
+
+<h4>5.4.2 Pelatihan — Auto-create Sertifikasi</h4>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> dibuka : Create
+    dibuka --> ditutup : Close
+    
+    state dibuka {
+        [*] --> terdaftar : Perawat Daftar
+        terdaftar --> lulus : Mark Lulus (auto-create Sertifikasi)
+        terdaftar --> tidak_lulus : Mark Tidak Lulus
+    }
+</pre>
+</div>
+
+<!-- 5.5 REGULATOR -->
+<div class="no-break">
+<h3>5.5 ⚖️ REGULATOR</h3>
+<h4>5.5.1 Data Legalitas STR — 6 Status State Machine</h4>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> draft : Create/Import
+    draft --> submitted : Perawat Submit
+    submitted --> pending_sync : Request Sync
+    submitted --> verified : Regulator Verify
+    submitted --> rejected : Regulator Reject
+    pending_sync --> verified : Sync Success
+    pending_sync --> rejected : Sync Failed
+    verified --> expired : STR Expired
+    rejected --> submitted : Reopen
+    expired --> submitted : Renew
+    
+    note right of verified : status_str = aktif
+    note right of expired : status_str = expired
+</pre>
+
+<h4>5.5.2 Dokumen STR — Review Flow</h4>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> pending : Upload
+    pending --> approved : Approve
+    pending --> rejected : Reject
+    approved --> [*]
+    rejected --> [*]
+</pre>
+</div>
+
+<!-- 5.6 ADMIN -->
+<div class="no-break">
+<h3>5.6 👤 ADMIN</h3>
+<h4>5.6.1 Dashboard Metrics</h4>
+<table>
+  <thead><tr><th>Kategori</th><th>Metrics</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Perawat</strong></td><td>Total, Ready, Fresh Graduate, Bekerja, Berpengalaman</td></tr>
+    <tr><td><strong>STR</strong></td><td>Aktif, Hold, Expired, Expiring 30 hari, Tanpa expiry date</td></tr>
+    <tr><td><strong>Lowongan</strong></td><td>Dibuka</td></tr>
+    <tr><td><strong>Rekrutmen</strong></td><td>Locked, Hired</td></tr>
+    <tr><td><strong>Lamaran</strong></td><td>Total, Diajukan, Diterima</td></tr>
+    <tr><td><strong>Pending Review</strong></td><td>Riwayat Pekerjaan, Sertifikasi, Legalitas, Users</td></tr>
+    <tr><td><strong>Movement (range)</strong></td><td>Perawat baru, Legalitas reviewed, Pengalaman verified, Hired, Career Events</td></tr>
+  </tbody>
+</table>
+<p><strong>Date ranges:</strong> 7d, 30d, this_month, custom (max 120 hari). Trend chart per kategori career event.</p>
+
+<h4>5.6.2 Admin Routes</h4>
+<div class="route-list">
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/admin/dashboard</span><span class="route-desc">Dashboard statistik lengkap</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/admin/users</span><span class="route-desc">User management (filter: role, status, search)</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/admin/users/{id}/approve</span><span class="route-desc">Approve user (pending → active)</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/admin/users/{id}/suspend</span><span class="route-desc">Suspend user</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/admin/users/{id}/activate</span><span class="route-desc">Reactivate user</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/admin/users/{id}/reset-password</span><span class="route-desc">Send reset password link</span></div>
+  <div class="route-item"><span class="route-method post">POST</span><span class="route-path">/admin/users/{id}/impersonate</span><span class="route-desc">Login sebagai user lain</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/admin/api-keys</span><span class="route-desc">Manage API keys</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/admin/audit-logs</span><span class="route-desc">View audit logs</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/admin/data-quality</span><span class="route-desc">Data quality dashboard</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/admin/reports/*.csv</span><span class="route-desc">Export CSV (perawat, lowongan, rekrutmen, lamaran, legalitas, riwayat, audit)</span></div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 6: PUBLIC ROUTES -->
+<!-- ============================================ -->
+<h2><span class="section-num">6</span> Public Routes (Tanpa Auth)</h2>
+
+<div class="no-break">
+<div class="route-list">
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/</span><span class="route-desc">Welcome / landing page</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/lowongan</span><span class="route-desc">Public job listing (semua lowongan dibuka)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/lowongan/{id}</span><span class="route-desc">Public job detail</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/p/{token}</span><span class="route-desc">Public nurse profile (via share token 48 char)</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/p/{token}/cv</span><span class="route-desc">Download public CV HTML</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/p/{token}/cv-pdf</span><span class="route-desc">Download public CV PDF</span></div>
+  <div class="route-item"><span class="route-method get">GET</span><span class="route-path">/api/v1/docs</span><span class="route-desc">Swagger API documentation page</span></div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 7: REST API -->
+<!-- ============================================ -->
+<h2><span class="section-num">7</span> REST API v1</h2>
+
+<div class="no-break">
+<h3>7.1 API Endpoints</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Scope</th><th>Deskripsi</th></tr></thead>
+  <tbody>
+    <tr><td><span class="route-method post">POST</span></td><td><code>/api/v1/lulusan</code></td><td><code>lulusan:write</code></td><td>Input data lulusan via API</td></tr>
+    <tr><td><span class="route-method post">POST</span></td><td><code>/api/v1/sertifikasi</code></td><td><code>sertifikasi:write</code></td><td>Input sertifikasi via API</td></tr>
+    <tr><td><span class="route-method post">POST</span></td><td><code>/api/v1/legalitas</code></td><td><code>legalitas:write</code></td><td>Input/update data legalitas via API</td></tr>
+    <tr><td><span class="route-method get">GET</span></td><td><code>/api/v1/openapi.json</code></td><td>—</td><td>OpenAPI specification (public)</td></tr>
+  </tbody>
+</table>
+
+<h3>7.2 API Middleware Stack</h3>
+<pre class="mermaid">
+flowchart LR
+    A[API Request] --> B[api middleware]
+    B --> C[api_request_log]
+    C --> D["api_key:{scope}"]
+    D --> E[api_idempotency]
+    E --> F["throttle:api_key"]
+    F --> G[Controller]
+</pre>
+<ul>
+  <li><strong>ApiKeyAuth</strong> — Validates <code>X-Api-Key</code> header + optional HMAC signature via <code>X-Signature</code></li>
+  <li><strong>ApiIdempotency</strong> — Prevents duplicate requests using <code>Idempotency-Key</code> header</li>
+  <li><strong>ApiRequestLogger</strong> — Logs every API request for auditing</li>
+</ul>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 8: CAREER EVENTS -->
+<!-- ============================================ -->
+<h2><span class="section-num">8</span> Career Events Timeline</h2>
+
+<div class="no-break">
+<p>Setiap perubahan signifikan pada data perawat secara otomatis di-record ke tabel <code>career_events</code> melalui Eloquent Observer (<strong>CareerEventObserver</strong>).</p>
+<table>
+  <thead><tr><th>Category</th><th>Event Key</th><th>Trigger</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="3"><span class="badge badge-blue">pendidikan</span></td><td><code>lulusan.recorded</code></td><td>RiwayatPendidikan created</td></tr>
+    <tr><td><code>lulusan.status_changed</code></td><td>status_verifikasi berubah</td></tr>
+    <tr><td><code>lulusan.updated</code></td><td>Data pendidikan diupdate</td></tr>
+    <tr><td rowspan="4"><span class="badge badge-yellow">sertifikasi</span></td><td><code>sertifikasi.recorded</code></td><td>SertifikasiKompetensi created (pending)</td></tr>
+    <tr><td><code>sertifikasi.verified</code></td><td>Status → verified/valid</td></tr>
+    <tr><td><code>sertifikasi.rejected</code></td><td>Status → rejected</td></tr>
+    <tr><td><code>sertifikasi.updated</code></td><td>Data sertifikasi diupdate</td></tr>
+    <tr><td rowspan="7"><span class="badge badge-purple">legalitas</span></td><td><code>legalitas.draft</code></td><td>DataLegalitas created (draft)</td></tr>
+    <tr><td><code>legalitas.submitted</code></td><td>Data submitted untuk verifikasi</td></tr>
+    <tr><td><code>legalitas.pending_sync</code></td><td>Menunggu sinkronisasi</td></tr>
+    <tr><td><code>legalitas.verified</code></td><td>STR terverifikasi</td></tr>
+    <tr><td><code>legalitas.expired</code></td><td>STR expired</td></tr>
+    <tr><td><code>legalitas.rejected</code></td><td>Data ditolak</td></tr>
+    <tr><td><code>legalitas.updated</code></td><td>Data legalitas diupdate</td></tr>
+    <tr><td rowspan="6"><span class="badge badge-green">pengalaman</span></td><td><code>pengalaman.recorded</code></td><td>RiwayatPekerjaan created</td></tr>
+    <tr><td><code>pengalaman.submitted</code></td><td>Diajukan verifikasi (pending)</td></tr>
+    <tr><td><code>pengalaman.verified</code></td><td>Pengalaman diverifikasi</td></tr>
+    <tr><td><code>pengalaman.rejected</code></td><td>Pengalaman ditolak</td></tr>
+    <tr><td><code>pengalaman.completed</code></td><td>Kontrak selesai</td></tr>
+    <tr><td><code>pengalaman.resigned</code></td><td>Status resign</td></tr>
+    <tr><td><span class="badge badge-primary">kinerja</span></td><td><code>kinerja.updated</code></td><td>Evaluasi kinerja diupdate</td></tr>
+  </tbody>
+</table>
+
+<h3>8.2 Observer Architecture</h3>
+<pre class="mermaid">
+flowchart TD
+    A["Model::created / ::updated"] --> B[CareerEventObserver]
+    B --> C{Model Type?}
+    C -->|RiwayatPendidikan| D[recordRiwayatPendidikan*]
+    C -->|SertifikasiKompetensi| E[recordSertifikasi*]
+    C -->|DataLegalitas| F[recordLegalitas*]
+    C -->|RiwayatPekerjaan| G[recordRiwayatPekerjaan*]
+    D & E & F & G --> H[CareerEventService::record]
+    H --> I[Insert career_events row]
+</pre>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 9: WEBHOOK -->
+<!-- ============================================ -->
+<h2><span class="section-num">9</span> Webhook System</h2>
+
+<div class="no-break">
+<h3>9.1 Webhook Delivery Flow</h3>
+<pre class="mermaid">
+sequenceDiagram
+    participant Model as Eloquent Model
+    participant Observer as VerifiedStatusWebhookObserver
+    participant Service as OutgoingWebhookService
+    participant Job as DeliverWebhookJob
+    participant Endpoint as External Webhook URL
+    
+    Model->>Observer: updated() event
+    Observer->>Observer: Check if status changed to "verified"
+    Observer->>Service: dispatch(event, payload)
+    Service->>Service: Find matching WebhookSubscriptions
+    Service->>Job: Queue DeliverWebhookJob per subscription
+    Job->>Endpoint: POST with signed payload
+    Job->>Job: Record WebhookDelivery result
+    
+    alt Delivery Failed
+        Job->>Job: Retry with exponential backoff
+    end
+</pre>
+
+<h3>9.2 Webhook Events</h3>
+<table>
+  <thead><tr><th>Event</th><th>Trigger</th><th>Payload</th></tr></thead>
+  <tbody>
+    <tr><td><code>legalitas.data.verified</code></td><td>DataLegalitas <code>data_status</code> → <code>verified</code></td><td>Perawat NIK, nomor STR, tanggal verifikasi</td></tr>
+    <tr><td><code>sertifikasi.verified</code></td><td>SertifikasiKompetensi <code>status_verifikasi</code> → <code>verified</code></td><td>Perawat NIK, nama sertifikat, nomor</td></tr>
+    <tr><td><code>riwayat_pekerjaan.verified</code></td><td>RiwayatPekerjaan <code>verifikasi_status</code> → <code>verified</code></td><td>Perawat NIK, posisi, mitra</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 10: NOTIFICATIONS -->
+<!-- ============================================ -->
+<h2><span class="section-num">10</span> Notification System</h2>
+
+<div class="no-break">
+<table>
+  <thead><tr><th>Notification Class</th><th>Trigger</th><th>Recipient</th></tr></thead>
+  <tbody>
+    <tr><td><code>LowonganBaruNotification</code></td><td>Lowongan baru dibuat</td><td>Perawat matching criteria</td></tr>
+    <tr><td><code>LamaranMasukNotification</code></td><td>Perawat melamar</td><td>User mitra terkait</td></tr>
+    <tr><td><code>LamaranStatusNotification</code></td><td>Lamaran diproses/ditolak/diterima</td><td>User perawat</td></tr>
+    <tr><td><code>LegalitasDataStatusNotification</code></td><td>Data status legalitas berubah</td><td>User perawat</td></tr>
+    <tr><td><code>LegalitasDocumentStatusNotification</code></td><td>Dokumen STR direview</td><td>User perawat</td></tr>
+    <tr><td><code>RiwayatPekerjaanStatusNotification</code></td><td>Riwayat pekerjaan diverifikasi/ditolak</td><td>User perawat</td></tr>
+    <tr><td><code>SertifikasiStatusNotification</code></td><td>Sertifikasi diverifikasi/ditolak</td><td>User perawat</td></tr>
+    <tr><td><code>ExperienceSyncFailedNotification</code></td><td>Sync pengalaman gagal</td><td>User mitra</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 11: SCHEDULED -->
+<!-- ============================================ -->
+<h2><span class="section-num">11</span> Scheduled Jobs & Artisan Commands</h2>
+
+<div class="no-break">
+<h3>11.1 Scheduled Tasks</h3>
+<table>
+  <thead><tr><th>Schedule</th><th>Command / Job</th><th>Deskripsi</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Daily 01:00</strong></td><td><code>legalitas:sync</code></td><td>Sinkronisasi status legalitas STR dari source eksternal</td></tr>
+    <tr><td><strong>Daily 02:00</strong></td><td><code>api:idempotency:purge</code></td><td>Hapus idempotency key yang expired / stale</td></tr>
+    <tr><td><strong>Hourly</strong></td><td><code>SyncExperienceJob</code></td><td>Sinkronisasi pengalaman kerja dari mitra</td></tr>
+  </tbody>
+</table>
+
+<h3>11.2 Artisan Commands</h3>
+<table>
+  <thead><tr><th>Command</th><th>Purpose</th><th>Environment</th></tr></thead>
+  <tbody>
+    <tr><td><code>legalitas:sync</code></td><td>Sync status legalitas STR</td><td>All</td></tr>
+    <tr><td><code>experience:sync</code></td><td>Dispatch job sync pengalaman kerja</td><td>All</td></tr>
+    <tr><td><code>api:idempotency:purge</code></td><td>Purge expired/stale idempotency keys (--dry-run)</td><td>All</td></tr>
+    <tr><td><code>demo:refresh</code></td><td>Reset dan isi ulang demo data (--force)</td><td>Non-production</td></tr>
+    <tr><td><code>demo:scenario</code></td><td>Jalankan timeline demo 1 perawat (--nik=)</td><td>Non-production</td></tr>
+    <tr><td><code>preflight:perawat-identity</code></td><td>Check mismatch perawat_id/nik (--json, --fail-on-warning)</td><td>All</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 12: DATA VERIFICATION E2E -->
+<!-- ============================================ -->
+<h2><span class="section-num">12</span> Data Verification Flow (End-to-End)</h2>
+
+<div class="no-break">
+<pre class="mermaid">
+flowchart TD
+    subgraph Kampus
+        K1[Input Lulusan] --> K2[RiwayatPendidikan<br/>status=verified]
+    end
+    
+    subgraph Lembaga
+        L1[Input Sertifikasi] --> L2[SertifikasiKompetensi<br/>status=pending]
+        L2 --> L3{Verify?}
+        L3 -->|Yes| L4[status=verified ✅]
+        L3 -->|No| L5[status=rejected ❌]
+    end
+    
+    subgraph Regulator
+        R1[Input Legalitas STR] --> R2[DataLegalitas<br/>data_status=draft]
+        R2 --> R3[Perawat Submit → submitted]
+        R3 --> R4{Review}
+        R4 -->|Approve| R5["data_status=verified ✅<br/>status_str=aktif"]
+        R4 -->|Reject| R6["data_status=rejected ❌"]
+    end
+    
+    subgraph Mitra
+        M1[Create RiwayatPekerjaan] --> M2[verifikasi_status=pending]
+        M2 --> M3{Verify?}
+        M3 -->|Yes| M4[verifikasi_status=verified ✅]
+        M3 -->|No| M5[verifikasi_status=rejected ❌]
+    end
+    
+    K2 & L4 & R5 --> PS[PerawatStatusService::refresh]
+    PS --> READY{"All 3 verified?"}
+    READY -->|Yes| HIRE["status_kesiapan = READY_TO_HIRE 🎯"]
+    READY -->|No| DRAFT["status_kesiapan = DRAFT"]
+</pre>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 13: RECRUITMENT PIPELINE -->
+<!-- ============================================ -->
+<h2><span class="section-num">13</span> Recruitment Pipeline (Complete)</h2>
+
+<div class="no-break">
+<pre class="mermaid">
+flowchart TD
+    subgraph "Jalur 1: Via Lowongan"
+        A[Mitra buat Lowongan] --> B[Notif ke Perawat matching]
+        B --> C[Perawat Apply → Lamaran DIAJUKAN]
+        C --> D{Mitra Action}
+        D -->|Process| E[Lamaran DIPROSES + Rekrutmen LOCKED]
+        D -->|Reject| F[Lamaran DITOLAK + Rekrutmen RELEASED]
+        E --> G{Mitra Action}
+        G -->|Hire| H["Lamaran DITERIMA + Rekrutmen HIRED<br/>+ Auto-create RiwayatPekerjaan"]
+        G -->|Reject| F
+    end
+    
+    subgraph "Jalur 2: Direct Hire"
+        I[Mitra Browse Kandidat] --> J[Filter & Search]
+        J --> K{Action}
+        K -->|Lock| L[Rekrutmen LOCKED]
+        K -->|Hire| M["Rekrutmen HIRED<br/>+ Auto-create RiwayatPekerjaan"]
+        L --> N{Next}
+        N -->|Hire| M
+        N -->|Release| O[Rekrutmen RELEASED]
+    end
+    
+    H & M --> P[PerawatStatusService::refresh]
+    P --> Q["status_ketenagakerjaan = BEKERJA"]
+</pre>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 14: IDENTITY MODEL -->
+<!-- ============================================ -->
+<h2><span class="section-num">14</span> Identity Model (perawat_nik)</h2>
+
+<div class="no-break">
+<div class="box box-danger">
+  <div class="box-title">🔑 Penting: Foreign Key Utama</div>
+  Seluruh data portfolio perawat dihubungkan melalui <code>perawat_nik</code> (NIK 16 digit) sebagai foreign key, BUKAN <code>perawat_id</code>.
+  Ini memungkinkan data tetap terintegrasi meskipun record perawat dibuat secara terpisah oleh berbagai pihak (kampus, lembaga, regulator, mitra).
+</div>
+
+<h3>Tables yang menggunakan perawat_nik sebagai FK</h3>
+<table>
+  <thead><tr><th>Table</th><th>Relationship</th><th>Ditulis oleh</th></tr></thead>
+  <tbody>
+    <tr><td><code>users</code></td><td>User account → Perawat</td><td>System (register/kampus import)</td></tr>
+    <tr><td><code>data_legalitas</code></td><td>STR data → Perawat</td><td>Regulator / API</td></tr>
+    <tr><td><code>riwayat_pendidikan</code></td><td>Education → Perawat</td><td>Kampus / API</td></tr>
+    <tr><td><code>sertifikasi_kompetensi</code></td><td>Certification → Perawat</td><td>Lembaga / API</td></tr>
+    <tr><td><code>riwayat_pekerjaan</code></td><td>Employment → Perawat</td><td>Mitra / Perawat</td></tr>
+    <tr><td><code>rekrutmen</code></td><td>Recruitment → Perawat</td><td>Mitra</td></tr>
+    <tr><td><code>lamaran</code></td><td>Application → Perawat</td><td>Perawat</td></tr>
+    <tr><td><code>tracing_alumni</code></td><td>Alumni tracing → Perawat</td><td>Kampus</td></tr>
+    <tr><td><code>pelatihan_peserta</code></td><td>Training participants → Perawat</td><td>System</td></tr>
+    <tr><td><code>career_events</code></td><td>Timeline → Perawat</td><td>System (observer)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 15: SOURCE TRACKING -->
+<!-- ============================================ -->
+<h2><span class="section-num">15</span> Source Tracking & Audit</h2>
+
+<div class="no-break">
+<h3>15.1 Provenance Tracking</h3>
+<p>Setiap record data memiliki field <code>source_system</code> dan <code>source_actor</code> untuk audit trail:</p>
+<table>
+  <thead><tr><th>Source System</th><th>Source Actor</th><th>Konteks</th></tr></thead>
+  <tbody>
+    <tr><td><code>kampus_portal</code></td><td><code>kampus</code></td><td>Data lulusan dari kampus</td></tr>
+    <tr><td><code>lembaga_portal</code></td><td><code>lembaga</code></td><td>Sertifikasi dari lembaga pelatihan</td></tr>
+    <tr><td><code>regulator_portal</code></td><td><code>regulator</code></td><td>Data legalitas STR dari regulator</td></tr>
+    <tr><td><code>mitra_portal</code></td><td><code>mitra</code></td><td>Riwayat pekerjaan dari mitra/employer</td></tr>
+    <tr><td><code>perawat_portal</code></td><td><code>perawat</code></td><td>Self-reported data dari perawat</td></tr>
+    <tr><td><code>api</code></td><td><code>api_client</code></td><td>Data via REST API</td></tr>
+    <tr><td><code>integration</code></td><td><code>system</code></td><td>Auto-sync dari integrasi eksternal</td></tr>
+  </tbody>
+</table>
+
+<h3>15.2 Audit Log Actions</h3>
+<div class="cols-2">
+  <div>
+    <h4>Lowongan & Lamaran</h4>
+    <ul>
+      <li><code>lowongan.create</code></li>
+      <li><code>lowongan.update</code></li>
+      <li><code>lowongan.close</code> / <code>lowongan.reopen</code></li>
+      <li><code>lowongan.delete</code></li>
+      <li><code>lamaran.apply</code></li>
+      <li><code>lamaran.lock</code></li>
+      <li><code>lamaran.reject</code> / <code>lamaran.hire</code></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Data & User</h4>
+    <ul>
+      <li><code>riwayat_pekerjaan.start</code></li>
+      <li><code>riwayat_pekerjaan.verify</code> / <code>.reject</code></li>
+      <li><code>sertifikasi.verify</code> / <code>.reject</code></li>
+      <li><code>legalitas.sync</code> / <code>.review</code></li>
+      <li><code>user.approve</code></li>
+      <li><code>user.suspend</code> / <code>user.activate</code></li>
+      <li><code>user.reset_password</code></li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 16: SUMMARY -->
+<!-- ============================================ -->
+<h2><span class="section-num">16</span> Ringkasan Komponen</h2>
+
+<div class="no-break">
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-value">31</div><div class="stat-label">Models</div></div>
+  <div class="stat-card"><div class="stat-value">43</div><div class="stat-label">Controllers</div></div>
+  <div class="stat-card"><div class="stat-value">22</div><div class="stat-label">Services</div></div>
+  <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">Policies</div></div>
+  <div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Notifications</div></div>
+  <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Observers</div></div>
+  <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Queued Jobs</div></div>
+  <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Middleware</div></div>
+  <div class="stat-card"><div class="stat-value">59</div><div class="stat-label">Migrations</div></div>
+  <div class="stat-card"><div class="stat-value">140+</div><div class="stat-label">Web Routes</div></div>
+  <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">API Endpoints</div></div>
+  <div class="stat-card"><div class="stat-value">8</div><div class="stat-label">User Roles</div></div>
+  <div class="stat-card"><div class="stat-value">21</div><div class="stat-label">Career Event Types</div></div>
+  <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Webhook Events</div></div>
+  <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Scheduled Tasks</div></div>
+  <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Artisan Commands</div></div>
+</div>
+</div>
+
+<div class="footer">
+  <p><strong>Platform Keperawatan Indonesia</strong> — Comprehensive Application Flow Document</p>
+  <p>Generated: Juli 2026 | Laravel 11 | PHP 8.2+</p>
+</div>
+
+</body>
+</html>
