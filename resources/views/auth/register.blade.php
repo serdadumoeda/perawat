@@ -3,14 +3,14 @@
         <!-- Heading -->
         <div style="margin-bottom:1.5rem;">
             <div style="font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#e05252; margin-bottom:0.5rem;">Platform Keperawatan &middot; KADIN</div>
-            <h1 style="font-family:'Playfair Display',serif; font-size:1.75rem; font-weight:700; color:#1a1a1a; margin:0 0 0.375rem; line-height:1.2;">Buat akun &amp; klaim profil</h1>
-            <p style="font-size:0.875rem; color:#9a9a9a; margin:0;">Pilih peran yang sesuai. Perawat cukup masukkan NIK untuk menghubungkan ijazah kampus.</p>
+            <h1 style="font-family:'Playfair Display',serif; font-size:1.75rem; font-weight:700; color:#1a1a1a; margin:0 0 0.375rem; line-height:1.2;">Buat Akun</h1>
+            <p style="font-size:0.875rem; color:#9a9a9a; margin:0;">Pilih peran yang sesuai. Alumni maupun fresh graduate perawat bisa langsung mendaftar dengan NIK.</p>
         </div>
 
         <!-- Tips -->
         <div style="padding:0.875rem 1rem; border-radius:0.875rem; background:rgba(15,80,80,0.06); border:1px solid rgba(15,80,80,0.15); margin-bottom:1.5rem;">
-            <div style="font-size:0.75rem; font-weight:700; color:#0f5050; margin-bottom:0.375rem;">💡 Tips Auto-Claim Profil</div>
-            <div style="font-size:0.8rem; color:#5a5a5a; line-height:1.6;">Perawat: masukkan NIK 16 digit. Sistem akan otomatis mendeteksi ijazah &amp; data kampus Anda dari Kampus Gateway.</div>
+            <div style="font-size:0.75rem; font-weight:700; color:#0f5050; margin-bottom:0.375rem;">💡 Cara Daftar Sebagai Perawat</div>
+            <div style="font-size:0.8rem; color:#5a5a5a; line-height:1.6;">Masukkan NIK 16 digit Anda. Jika data sudah terdaftar di kampus, profil Anda akan terhubung otomatis. Jika belum, profil baru akan dibuat dan dapat dilengkapi setelah login.</div>
         </div>
 
         <!-- Real-time NIK Claim Banner (Initially Hidden) -->

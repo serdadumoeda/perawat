@@ -40,15 +40,14 @@ class RegisteredUserController extends Controller
         ]);
 
         $perawatNik = null;
+        $perawatId = null;
         if ($request->role === User::ROLE_PERAWAT) {
             $nikInput = (string) $request->nik;
-            $nimInput = (string) $request->input('nim');
 
+            // Cari data perawat berdasarkan NIK
             $perawat = Perawat::where('nik', $nikInput)->first();
-            if (!$perawat && $nimInput !== '') {
-                $perawat = Perawat::where('nim', $nimInput)->first();
-            }
 
+            // Jika NIK ditemukan dengan prefix TMP- (import kampus tanpa NIK asli), update NIK-nya
             if ($perawat && str_starts_with($perawat->nik, 'TMP-')) {
                 $oldNik = $perawat->nik;
                 $perawat->nik = $nikInput;
@@ -67,12 +66,25 @@ class RegisteredUserController extends Controller
                 User::where('perawat_nik', $oldNik)->update(['perawat_nik' => $nikInput]);
             }
 
-            $alreadyLinked = $perawat ? User::where('perawat_nik', $perawat->nik)->exists() : false;
-
-            if (!$perawat || $alreadyLinked) {
-                return back()->withErrors(['nik' => 'Data alumni tidak ditemukan atau sudah terhubung dengan akun lain.'])->onlyInput('nik');
+            // Jika NIK sudah terhubung ke akun lain, tolak
+            if ($perawat && User::where('perawat_nik', $perawat->nik)->exists()) {
+                return back()->withErrors(['nik' => 'NIK ini sudah terhubung dengan akun lain. Silakan login atau hubungi administrator.'])->onlyInput('nik');
             }
+
+            // Jika belum ada data perawat, buat profil baru secara otomatis (self-registration)
+            if (!$perawat) {
+                $perawat = Perawat::create([
+                    'nik'                    => $nikInput,
+                    'nama'                   => $request->name,
+                    'email'                  => $request->email,
+                    'status_kesiapan'        => Perawat::KESIAPAN_DRAFT,
+                    'status_ketenagakerjaan' => Perawat::KETENAGAKERJAAN_FRESH,
+                    'status_ketersediaan'    => Perawat::KETERSEDIAAN_AVAILABLE,
+                ]);
+            }
+
             $perawatNik = $perawat->nik;
+            $perawatId = $perawat->id;
         }
 
         $user = User::create([
@@ -81,6 +93,7 @@ class RegisteredUserController extends Controller
             'role' => $request->role,
             'status' => User::STATUS_PENDING,
             'perawat_nik' => $perawatNik,
+            'perawat_id' => $perawatId,
             'password' => Hash::make($request->password),
         ]);
 
